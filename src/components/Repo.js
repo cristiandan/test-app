@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getIssues } from '../actions/actions';
-import Issue from './Issue';
+import IssueList from './IssueList'
 
 class Repo extends React.Component {
     state = {
@@ -26,15 +26,6 @@ class Repo extends React.Component {
             issuesLoading = {},
         } = this.props;
 
-        let issuesList = '';
-        if (issuesLoading[name]) {
-            issuesList = 'Loading';
-        }
-        if (issues[name]) {
-            issuesList = issues[name].map(item => (
-                <Issue {...item} key={item.id} />
-            ));
-        }
         return (
             <li
                 onClick={() =>
@@ -42,7 +33,7 @@ class Repo extends React.Component {
                 }
             >
                 {name} 
-                {this.state.expanded && issuesList}
+                {this.state.expanded && <IssueList repoName={name} />}
             </li>
         );
     }

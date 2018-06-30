@@ -23,7 +23,7 @@ export const getReposSuccess = data => ({
 
 export const getIssues = (username, repoName) => {
     return dispatch => {
-        dispatch(getIssuesRequest());
+        dispatch(getIssuesRequest(repoName));
         return fetchIssues(username, repoName).then(data =>
             dispatch(getIssuesSuccess(repoName, data)),
         );
@@ -36,6 +36,7 @@ export const getIssuesSuccess = (repoName, data) => ({
     repoName,
 });
 
-export const getIssuesRequest = () => ({
+export const getIssuesRequest = repoName => ({
     type: FETCH_ISSUES_REQUEST,
+    repoName,
 });
