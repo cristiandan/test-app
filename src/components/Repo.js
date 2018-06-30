@@ -3,16 +3,50 @@ import { connect } from 'react-redux';
 import { getIssues } from '../actions/actions';
 import Issue from './Issue';
 
-const Repo = ({ name, owner: { login }, fetchIssues, issues = {}, issuesLoading = {} }) => {
-    let issuesList = "";
-    if (issuesLoading[name]) {
-        issuesList = "Loading"
+class Repo extends React.Component {
+    state = {
+        expanded: false,
+        loaded: false,
+    };
+
+    handleClick = (login, name) => {
+        !this.state.loaded && this.props.fetchIssues(login, name).then(
+            // set loaded state so we don't request data again
+            this.setState(() => ({ loaded: true })),
+        );
+        this.setState(({expanded}) => ({ expanded: !expanded}))
+    };
+
+    render() {
+        const {
+            name,
+            owner: { login },
+            fetchIssues,
+            issues = {},
+            issuesLoading = {},
+        } = this.props;
+
+        let issuesList = '';
+        if (issuesLoading[name]) {
+            issuesList = 'Loading';
+        }
+        if (issues[name]) {
+            issuesList = issues[name].map(item => (
+                <Issue {...item} key={item.id} />
+            ));
+        }
+        return (
+            <li
+                onClick={() =>
+                    this.handleClick(login, name)
+                }
+            >
+                {name} 
+                {this.state.expanded && issuesList}
+            </li>
+        );
     }
-    if (issues[name]) {
-        issuesList = issues[name].map(item => <Issue {...item} key={item.id}/>)
-    }
-    return <li onClick={() => fetchIssues(login, name)}>{name} {issuesList}</li>;
-};
+}
 
 export default connect(
     state => ({
@@ -21,7 +55,7 @@ export default connect(
     }),
     dispatch => ({
         fetchIssues: (username, repoName) => {
-            dispatch(getIssues(username, repoName));
+            return dispatch(getIssues(username, repoName));
         },
     }),
 )(Repo);
