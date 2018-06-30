@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Issue from './Issue';
 
-const IssueList = ({ repoName, issues = [], issuesLoading = [] }) => {
+export const IssueList = ({ repoName, issues = [], issuesLoading = [] }) => {
     const issuesList = issues[repoName]
         ? issues[repoName].map(item => <Issue {...item} key={item.id} />)
         : '';

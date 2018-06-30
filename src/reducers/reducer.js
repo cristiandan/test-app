@@ -7,7 +7,7 @@ import {
 } from '../actions/actions';
 import initialState from './initialState';
 
-export default function moviesReducer(state = initialState, action) {
+export default (state = initialState, action) => {
     switch (action.type) {
         case FETCH_REPOS_SUCCESS:
             return {
